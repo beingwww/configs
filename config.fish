@@ -212,3 +212,12 @@ function fish_prompt
     set_color normal
     echo -n ' ❯ '
 end
+
+alias gs='git status -sb'
+alias gd='git diff'
+alias gp='git pull'
+alias gc='git commit -v'
+alias gca='git commit -v -a'
+alias gco='git checkout'
+alias gb='git branch'
+alias gl='git log --oneline --graph --decorate'
