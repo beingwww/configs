@@ -157,3 +157,58 @@ end
 # ============================================================================
 # - 如果用 node,使用 nvm use 18
 # - tmux-session 管理: tmux-session save / tmux-session restore
+alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
+alias ports='netstat -tulanp'
+alias fishconfig='v ~/.config/fish/config.fish'
+
+
+# 让 man 页面更易读
+set -gx LESS_TERMCAP_mb \e'[1;32m'
+set -gx LESS_TERMCAP_md \e'[1;32m'
+set -gx LESS_TERMCAP_me \e'[0m'
+set -gx LESS_TERMCAP_se \e'[0m'
+set -gx LESS_TERMCAP_so \e'[01;33m'
+set -gx LESS_TERMCAP_ue \e'[0m'
+set -gx LESS_TERMCAP_us \e'[1;4;31m'
+
+function mkcd
+    mkdir -p $argv[1]; and cd $argv[1]
+end
+
+function backup
+    cp $argv[1] $argv[1].bak.(date +%Y%m%d_%H%M%S)
+end
+
+# 简洁的提示符
+function fish_prompt
+    # 用户名
+    set_color green
+    echo -n $USER
+    set_color normal
+    echo -n '@'
+    
+    # 主机名 (devnew2 显示为 amd)
+    set_color cyan
+    set -l hostname_display (hostname)
+    if test "$hostname_display" = "devnew2"
+        echo -n "227"
+    else
+        echo -n $hostname_display
+    end
+    set_color normal
+    echo -n ' '
+    
+    # 当前路径
+    set_color brblue
+    echo -n (prompt_pwd)
+    set_color normal
+    
+    # Git 分支显示
+    if git rev-parse --git-dir > /dev/null 2>&1
+        set_color yellow
+        echo -n ' ('(git branch 2>/dev/null | sed -n '/\* /s///p')')'
+    end
+    
+    set_color normal
+    echo -n ' ❯ '
+end

@@ -10,14 +10,6 @@ vnoremap q <esc>
 nnoremap g' gcc
 inoremap g' <esc>gcci
 
-
-" inoremap jk <esc>
-
-" nnoremap <enter> viw
-
-
-" vnoremap q <esc>
-
 set ignorecase
 set nosmartcase
 nnoremap U <c-r>
