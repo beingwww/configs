@@ -5,5 +5,5 @@ mv ~/.vimrc ~/.vimrc.bak
 mv ~/.tmux.conf ~/.tmux.conf.bak
 ln -s ~/configs/config.fish ~/.config/fish/config.fish
 ln -s ~/configs/nvim ~/.config/nvim
-ln -s ~/configs/tmux.conf ~/.tmux.conf
+ln -s ~/configs/.tmux.conf ~/.tmux.conf
 ln -s ~/configs/vimrc ~/.vimrc
