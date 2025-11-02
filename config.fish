@@ -36,7 +36,7 @@ alias uem="set -gx https_proxy http://162.105.85.167:7890/; set -gx http_proxy h
 alias nue="set -e https_proxy; set -e http_proxy; set -e no_proxy"
 
 # Enable proxy by default
-ue
+ue1882
 
 # ============================================================================
 # Python Aliases
@@ -120,36 +120,40 @@ end
 # Helper function to validate and execute k8s command
 function _k8s_exec
     set -l pattern $argv[1]
-    set -l cmd $argv[2..-1]
-    
     set -l pod_name (_k8s_get_pod $pattern)
-    
+
     if test -z "$pod_name"
         echo "Error: No running pod found matching '$pattern' in namespace hlps-test." >&2
         return 1
     end
-    
-    eval $cmd
+
+    # 返回 pod_name 供调用者使用
+    echo $pod_name
 end
 
 function go_external_k8s
-    _k8s_exec hlps-control "kubectl -n hlps-test exec -it $pod_name -c hlps-external-service -- /bin/bash"
+    set -l pod_name (_k8s_exec hlps-control)
+    test -n "$pod_name"; and kubectl -n hlps-test exec -it $pod_name -c hlps-external-service -- /bin/bash
 end
 
 function go_log_external_k8s
-    _k8s_exec hlps-control "kubectl -n hlps-test logs $pod_name -c hlps-external-service"
+    set -l pod_name (_k8s_exec hlps-control)
+    test -n "$pod_name"; and kubectl -n hlps-test logs $pod_name -c hlps-external-service
 end
 
 function go_control_k8s
-    _k8s_exec hlps-control "kubectl -n hlps-test exec -it $pod_name -c hlps-control -- /bin/bash"
+    set -l pod_name (_k8s_exec hlps-control)
+    test -n "$pod_name"; and kubectl -n hlps-test exec -it $pod_name -c hlps-control -- /bin/bash
 end
 
 function go_core_k8s
-    _k8s_exec hlps-core "kubectl -n hlps-test exec -it $pod_name -- /bin/bash"
+    set -l pod_name (_k8s_exec hlps-core)
+    test -n "$pod_name"; and kubectl -n hlps-test exec -it $pod_name -- /bin/bash
 end
 
 function go_ue_k8s
-    _k8s_exec hlps-ue "kubectl -n hlps-test exec -it $pod_name -- /bin/bash"
+    set -l pod_name (_k8s_exec hlps-ue)
+    test -n "$pod_name"; and kubectl -n hlps-test exec -it $pod_name -- /bin/bash
 end
 
 # ============================================================================
@@ -186,29 +190,29 @@ function fish_prompt
     echo -n $USER
     set_color normal
     echo -n '@'
-    
+
     # 主机名 (devnew2 显示为 amd)
     set_color cyan
     set -l hostname_display (hostname)
-    if test "$hostname_display" = "devnew2"
-        echo -n "227"
+    if test "$hostname_display" = devnew2
+        echo -n 227
     else
         echo -n $hostname_display
     end
     set_color normal
     echo -n ' '
-    
+
     # 当前路径
     set_color brblue
     echo -n (prompt_pwd)
     set_color normal
-    
+
     # Git 分支显示
-    if git rev-parse --git-dir > /dev/null 2>&1
+    if git rev-parse --git-dir >/dev/null 2>&1
         set_color yellow
         echo -n ' ('(git branch 2>/dev/null | sed -n '/\* /s///p')')'
     end
-    
+
     set_color normal
     echo -n ' ❯ '
 end
