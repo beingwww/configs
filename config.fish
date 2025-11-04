@@ -156,6 +156,16 @@ function go_ue_k8s
     test -n "$pod_name"; and kubectl -n hlps-test exec -it $pod_name -- /bin/bash
 end
 
+function go_sat_k8s
+    set -l pod_name (_k8s_exec hlps-sat)
+    test -n "$pod_name"; and kubectl -n hlps-test exec -it $pod_name -- /bin/bash
+end
+
+function go_sat_log_k8s
+    set -l pod_name (_k8s_exec hlps-sat)
+    test -n "$pod_name"; and kubectl -n hlps-test logs $pod_name -- /bin/bash
+end
+
 # ============================================================================
 # Notes
 # ============================================================================
@@ -225,3 +235,5 @@ alias gca='git commit -v -a'
 alias gco='git checkout'
 alias gb='git branch'
 alias gl='git log --oneline --graph --decorate'
+
+alias ka='cd ~/high_level_protocol_simulation/logs/kafka_log/'
